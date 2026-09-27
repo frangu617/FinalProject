@@ -1,6 +1,6 @@
 # Poker Hand Classification
 
-> This reading copy is displayed directly on GitHub. You can also [download the original HTML report](https://github.com/frangu617/FinalProject/blob/master/poker_hand_analysis_group_reading.html) and open it in your browser. Download and website setup instructions follow the report.
+> This reading copy is displayed directly on GitHub. You can also [download the original HTML report](https://github.com/frangu617/FinalProject/raw/refs/heads/master/poker_hand_analysis_group_reading.html?download=1) and open it in your browser. Download and website setup instructions follow the report.
 
 **AAI 500 - Group discussion draft - September 27, 2026**<br>
 **Team and contributors:** To be added by the group
@@ -254,8 +254,8 @@ OpenAI Codex helped with editing the notebook's code and explanations, formattin
 
 ## Download and read (works without GitHub Pages)
 
-1. Open [poker_hand_analysis_group_reading.html on GitHub](https://github.com/frangu617/FinalProject/blob/master/poker_hand_analysis_group_reading.html).
-2. Click **Download raw file** (the download icon near the top-right of the file). If you only see **Raw**, click it and use **Ctrl+S** on Windows or **Cmd+S** on Mac to save the file.
+1. Click [Download the HTML report](https://github.com/frangu617/FinalProject/raw/refs/heads/master/poker_hand_analysis_group_reading.html?download=1).
+2. If your browser displays the file instead of downloading it, right-click the download link and choose **Save link as?**.
 3. Save it as `poker_hand_analysis_group_reading.html`, keeping the `.html` extension.
 4. Find the downloaded file in your Downloads folder and double-click it. It should open in your browser.
 5. If it opens in VS Code or another editor, right-click the downloaded file, choose **Open with**, and select Edge, Chrome, Firefox, or Safari.
