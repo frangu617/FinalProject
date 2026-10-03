@@ -1,6 +1,39 @@
 # Poker Hand Classification
 
-> This reading copy is displayed directly on GitHub. You can also [download the original HTML report](https://github.com/frangu617/FinalProject/raw/refs/heads/master/poker_hand_analysis_group_reading.html?download=1) and open it in your browser. Download and website setup instructions follow the report.
+This project studies whether a model can learn to recognize and predict poker hands. The website brings together our proposal, a dataset explorer, and seven presentation parts. The analysis and modeling plan below remain a group discussion draft.
+
+## Open the project
+
+Start at [the project website](https://frangu617.github.io/FinalProject/) when GitHub Pages is enabled, or run the site locally:
+
+```powershell
+python -m http.server 8000 --bind 127.0.0.1
+```
+
+Run this command from the project folder, then open `http://localhost:8000/`. Keep the terminal running while viewing the site. The static website only needs Python's built-in server; it does not require the notebook's analysis packages. GitHub's file links below show the source; use the website or local server to view the rendered pages.
+
+## Pages and presentation progress
+
+| Page | Purpose and status |
+| --- | --- |
+| [Project home](index.html) | Navigation to the proposal, dataset, and all presentation parts. |
+| [Project proposal](poker_hand_analysis_group_reading.html) | Group reading draft with initial findings and the proposed analysis. |
+| [Explore the dataset](poker_hand_viewer.html) | Browse and sort training or test records with readable card and hand labels. |
+| [Part 1: Goal and Relevance](presentation_part1_goals_and_relevance.html) | Draft introduction and 268-word speaker script, approximately 1.5-2 minutes. |
+| [Part 2: Data and Preparation](presentation_part2_data_and_preparation.html) | Placeholder for the dataset and preparation checks. |
+| [Part 3: Main Exploratory Finding](presentation_part3_main_exploratory_finding.html) | Placeholder for common versus rare hands and class imbalance. |
+| [Part 4: Modeling Approach](presentation_part4_modeling_approach.html) | Placeholder for a fair comparison of models. |
+| [Part 5: Results and Limitations](presentation_part5_results_and_limitations.html) | Placeholder for measured results, errors, and uncertainty. |
+| [Part 6: Recommendations](presentation_part6_recommendations.html) | Placeholder for conclusions and next steps supported by the results. |
+| [Part 7: Contributions Slide](presentation_part7_contributions.html) | Placeholder for each member's name and specific contributions. |
+
+The presentation pages have previous/next navigation and a chibi professor with speech bubbles. Part 1 includes rehearsal tips; Parts 2-7 mark where future content belongs. The group reading's presentation outline also links to each part. Professor tips are separate from the spoken script.
+
+Every page includes a **Dark mode** toggle. The first visit follows your system preference, and your choice is saved in the browser and shared across pages on the same site. Printing uses a light theme. Use the local server for consistent navigation, theme persistence, and dataset loading.
+
+The original outline allocates one minute to Part 1; the expanded draft takes about 1.5-2 minutes. Rehearse and adjust the sections together to keep the final presentation within the required 8-10 minutes.
+
+## Analysis draft
 
 **AAI 500 - Group discussion draft - September 27, 2026**<br>
 **Team and contributors:** To be added by the group
@@ -15,7 +48,9 @@ The notebook loads the local dataset, previews the features, checks dimensions a
 
 This project explores how classification models identify five-card poker hands from each card's suit and rank.
 
-**Proposed research question:** How accurately can classification models identify poker hands, and how does performance differ between common and rare categories?
+**Project goal:** Can a model learn to recognize and predict poker hands?
+
+Here, prediction means identifying the category of a supplied five-card hand held out from training. We will evaluate overall accuracy and performance across common and rare categories. Forecasting future cards or hidden opponent hands would require a separate study.
 
 The group should confirm the research question and course requirements before choosing models. Poker categories follow fixed rules, so the final discussion should explain what we learn from a statistical classifier and how it compares with a rule-based evaluator.
 
@@ -246,17 +281,37 @@ OpenAI Codex helped with editing the notebook's code and explanations, formattin
 
 ---
 
-**Working files:** This notebook is the technical analysis draft. The separate HTML reading copy shows the saved explanations, tables, and chart without code and can be shared alone for discussion.
+**Working files:** The notebook is the technical analysis draft. The HTML reading copy shows the saved explanations, tables, and chart without code. Share the project website or the complete project folder so the shared theme assets remain available.
 
 **Final deliverables:** The HTML reading copy is a discussion aid. Prepare the required PDF report with notebook-output appendix and the MP4 presentation for the final submission. Keep the code and README in the team's GitHub repository.
 
 ---
 
 
-## Project navigation and dataset viewer
+## Dataset viewer
 
-Open [the project home page](index.html) to choose **Project proposal** or **Explore the dataset**. The dataset viewer runs on a static web server, including GitHub Pages, without the Python dataset script. For local use, run `python -m http.server 8000` from this folder and open `http://localhost:8000/`.
+The viewer offers the original training file (25,010 hands) and test file (1,000,000 hands) separately, with 100 rows per page. Clicking a column header sorts the entire selected file; clicking it again reverses the order. The larger test file may take a moment to load or sort.
 
-The viewer offers the original training and test files separately, with 100 hands per page and sorting across the selected file. Card suits, ranks, and hand categories use readable names based on [UCI?s Poker Hand documentation](https://archive.ics.uci.edu/dataset/158/poker+hand). Hover over a value for its original code; expand the code guide for all mappings. The larger test file may take a moment to load or sort.
+Card suits, ranks, and hand categories use readable labels based on [UCI's Poker Hand documentation](https://archive.ics.uci.edu/dataset/158/poker+hand). Hover over a value for its original numeric code, or expand the code guide for all mappings. The original card order and data values are preserved.
 
-Dataset credit: Cattral, R. & Oppacher, F. (2002). Poker Hand. UCI Machine Learning Repository. https://doi.org/10.24432/C5KW38. Licensed under CC BY 4.0. The files in `assets/` are unmodified copies from the supplied `poker+hand.zip`.
+The viewer runs on a static web server, including GitHub Pages. Opening its HTML file directly from disk may prevent the browser from loading the dataset; use the local-server command above.
+
+Dataset credit: Cattral, R. & Oppacher, F. (2002). *Poker Hand*. UCI Machine Learning Repository. [DOI: 10.24432/C5KW38](https://doi.org/10.24432/C5KW38). Licensed under CC BY 4.0. The two `.data` files in `assets/` are unmodified copies from the supplied `poker+hand.zip`.
+
+## Project files and editing
+
+| File | Purpose |
+| --- | --- |
+| `index.html` | Home page and links to every presentation section. |
+| `poker_hand_analysis_group_reading.html` | Proposal and saved descriptive findings. |
+| `poker_hand_analysis.ipynb` | Technical notebook for analysis and future modeling. |
+| `poker_hand_viewer.html` | Dataset browsing, sorting, and readable labels. |
+| `presentation_part*.html` | Individual presentation pages; edit these to add slides and speaker notes. |
+| `assets/theme.css` and `assets/theme.js` | Shared colors, toggle behavior, and saved theme preference. |
+| `assets/presentation.css` | Shared presentation layout and professor speech bubbles. |
+| `assets/chibi-professor.png` | AI-generated professor illustration used on the presentation pages. |
+| `assets/poker-hand-*.data` | Original training and test records for the static viewer. |
+| `poker_hand_dataset.py` | Optional UCI-fetching Python server; requires its analysis dependencies. |
+| `poker+hand.zip` | Supplied dataset archive. |
+
+Keep the HTML files and `assets/` directory together. After editing, refresh the local website to review the changes. The HTML pages are saved drafts and do not automatically update from the notebook. For GitHub Pages configured to publish from `master`, commit and push the changes, then wait for deployment before checking the website.
