@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presentation Part 1 &mdash; Goal and Relevance</title>
+<link rel="stylesheet" href="assets/presentation.css">
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/theme.js"></script>
+</head>
+<body><main>
+<div class="page-toolbar"><nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html">Project proposal</a> &middot; <a href="poker_hand_viewer.html">Explore the dataset</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button></div>
+<h1>Part 1: Project Goal and Relevance</h1>
+<p class="subtitle">Presentation opening &middot; Approximately 1.5&ndash;2 minutes at a natural speaking pace.</p>
+<section class="slide" aria-labelledby="slide-heading">
+<h2 id="slide-heading">Can a model learn to recognize and predict poker hands?</h2>
+<p><strong>Our goal:</strong> Can a model learn to recognize and predict poker hands? We will study how models learn patterns from labeled examples and use them to predict the category of hands held out from training.</p>
+<ul>
+<li><strong>Compare performance:</strong> How accurately do models predict common and rare hand categories on held-out data?</li>
+<li><strong>Evaluate fairly:</strong> Check category-level results alongside overall accuracy.</li>
+<li><strong>Explain what we learn:</strong> Compare learned patterns with the fixed rules of poker.</li>
+</ul>
+<p><strong>Relevance:</strong> A clear classification problem that illustrates the challenges of uneven data and reliable model evaluation.</p>
+</section>
+<section class="script" aria-labelledby="script-heading">
+<h2 id="script-heading">Introduction and speaker script</h2><aside class="professor-tip" aria-label="Professor tip"><img src="assets/chibi-professor.png" alt="Chibi female professor with long black hair, glasses, and a white lab coat" width="110" height="165"><div class="speech-bubble"><strong>A little professor tip</strong><p>Pause after the opening question. Explain <em>recognize</em> as learning patterns and <em>predict</em> as applying those patterns to hands held out from training. These bubbles are rehearsal notes; you do not need to read them aloud.</p></div></aside>
+<p>Hello everyone. Our project begins with a question: can a model learn to recognize and predict poker hands? When we look at five cards, we might recognize a pair or a straight by applying poker rules. We want to investigate whether a machine learning model can learn these patterns from examples and predict the correct hand category for hands held out from training.</p>
+<p>We are using the Poker Hand dataset from the UCI Machine Learning Repository. Each record includes the suit and rank of five cards, along with the correct hand category. During training, these labeled examples help the model learn. During evaluation, we supply the cards, let the model predict a category, and compare its prediction with the recorded answer. Here, prediction means identifying the category of a complete hand; forecasting future cards would be a separate task.</p>
+<p>Our goal is to evaluate how accurately that learning carries over, especially across common and rare hands. In our combined dataset, high-card hands and one-pair hands make up about ninety-two percent of the records, while only eight examples are royal flushes. A strong overall accuracy score could therefore hide weak performance on rare categories.</p>
+<aside class="professor-tip" aria-label="Professor tip"><img src="assets/chibi-professor.png" alt="Chibi female professor with long black hair, glasses, and a white lab coat" width="110" height="165"><div class="speech-bubble"><strong>A little professor tip</strong><p>An accuracy score can look impressive when common hands dominate. Ask: how well does the model recognize <em>each</em> category? Eight royal flush examples are too few to support strong claims about reliability.</p></div></aside>
+<p>That is why this project matters beyond poker. It lets us explore how uneven data affects learning and why we need to examine individual categories alongside overall results. Poker provides a useful reference because its categories follow fixed rules.</p>
+<p>We plan to compare classification models, examine their errors, and explain their strengths and limitations. Our analysis is still in progress. Next, we will introduce the dataset and how we plan to prepare it for modeling.</p>
+</section>
+<section aria-labelledby="prediction-heading">
+<h2 id="prediction-heading">Discussion notes: What can the model predict?</h2><aside class="professor-tip" aria-label="Professor tip"><img src="assets/chibi-professor.png" alt="Chibi female professor with long black hair, glasses, and a white lab coat" width="110" height="165"><div class="speech-bubble"><strong>A little professor tip</strong><p>Think of prediction here as <em>naming the hand we can already see</em>. All five cards are inputs. That is different from guessing the next card in a random deal!</p></div></aside>
+<p><strong>Yes&mdash;a model trained on this dataset can attempt to predict the category of a supplied five-card hand.</strong> Its inputs are the ten suit-and-rank values; its output is one of the ten hand categories. For example, given five cards containing a pair of Kings, it could predict &ldquo;One pair.&rdquo; Its reliability needs to be measured on held-out data, especially for rare categories.</p>
+<p>The hand category is already determined once the five cards are known. In machine learning, &ldquo;prediction&rdquo; can mean inferring a label from inputs; it does not have to mean forecasting a future event. Because poker has explicit rules, a correctly implemented rule-based evaluator is an appropriate reference for this task.</p>
+<p><strong>Predicting future cards or an opponent's hidden hand is a different question.</strong> This dataset contains labeled five-card hands, rather than betting histories, player behavior, or sequences of future draws. Training on it alone does not establish a model's ability to forecast a random deal, recommend bets, or estimate a player's chance of winning against opponents.</p>
+<p>If we wanted to estimate the probability of completing a hand after a draw, we would need to define the known cards and the drawing rules. That question can be addressed with probability calculations or simulations; it is beyond our current hand-classification objective.</p>
+<aside class="professor-tip" aria-label="Professor tip"><img src="assets/chibi-professor.png" alt="Chibi female professor with long black hair, glasses, and a white lab coat" width="110" height="165"><div class="speech-bubble"><strong>A little professor tip</strong><p>Use future tense for the study: &ldquo;We plan to evaluate...&rdquo; We have dataset findings, but model performance is still pending.</p></div></aside><div class="note"><strong>Suggested answer if asked during the presentation:</strong> &ldquo;Yes, the model can learn to classify a hand when we supply all five cards. Here, prediction means identifying the hand category. Forecasting cards that have not been dealt would require a different setup.&rdquo;</div>
+</section>
+<footer>
+<h2>Sources and project status</h2>
+<p>Dataset structure and code definitions: <a href="https://archive.ics.uci.edu/dataset/158/poker+hand">UCI Machine Learning Repository &mdash; Poker Hand</a>. Cattral, R. &amp; Oppacher, F. (2002). DOI: <a href="https://doi.org/10.24432/C5KW38">10.24432/C5KW38</a>.</p>
+<p>The frequency figures come from the combined-file summaries in our <a href="poker_hand_analysis_group_reading.html">project reading draft</a>. They describe the dataset, not model performance. No models have been trained or evaluated in the current draft. The discussion notes are preparation material and are separate from the timed opening script.</p>
+</footer>
+<nav class="presentation-sequence" aria-label="Presentation parts"><a href="index.html">All presentation parts</a> &middot; <a href="presentation_part2_data_and_preparation.html">Part 2: Data and Preparation &rarr;</a></nav></main></body></html>

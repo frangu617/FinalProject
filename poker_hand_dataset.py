@@ -27,6 +27,17 @@ def create_handler(data):
             request = urlparse(self.path)
 
             static_files = {
+                "/presentation_part2_data_and_preparation.html": ("presentation_part2_data_and_preparation.html", "text/html; charset=utf-8"),
+                "/presentation_part3_main_exploratory_finding.html": ("presentation_part3_main_exploratory_finding.html", "text/html; charset=utf-8"),
+                "/presentation_part4_modeling_approach.html": ("presentation_part4_modeling_approach.html", "text/html; charset=utf-8"),
+                "/presentation_part5_results_and_limitations.html": ("presentation_part5_results_and_limitations.html", "text/html; charset=utf-8"),
+                "/presentation_part6_recommendations.html": ("presentation_part6_recommendations.html", "text/html; charset=utf-8"),
+                "/presentation_part7_contributions.html": ("presentation_part7_contributions.html", "text/html; charset=utf-8"),
+                "/assets/presentation.css": ("assets/presentation.css", "text/css; charset=utf-8"),
+                "/assets/theme.js": ("assets/theme.js", "text/javascript; charset=utf-8"),
+                "/assets/theme.css": ("assets/theme.css", "text/css; charset=utf-8"),
+                "/assets/chibi-professor.png": ("assets/chibi-professor.png", "image/png"),
+                "/presentation_part1_goals_and_relevance.html": ("presentation_part1_goals_and_relevance.html", "text/html; charset=utf-8"),
                 "/": ("index.html", "text/html; charset=utf-8"),
                 "/index.html": ("index.html", "text/html; charset=utf-8"),
                 "/poker_hand_viewer.html": ("poker_hand_viewer.html", "text/html; charset=utf-8"),

@@ -1,0 +1,28 @@
+/* Shared colors for every project page. */
+:root{color-scheme:light;--page:#f3f5f8;--surface:#fff;--text:#202b38;--heading:#164b70;--link:#176196;--muted:#526779;--slide:#eaf1f7;--accent:#3673a5;--note:#f8fafc;--focus:#2563eb;--tip:#f7f0ff;--bubble-border:#c5afe0;--tip-heading:#654586;--border:#d4dbe6}
+:root[data-theme="dark"]{color-scheme:dark;--page:#101722;--surface:#1b2635;--text:#e5ebf3;--heading:#abd9ff;--link:#93caff;--muted:#b4c3d5;--slide:#26394d;--accent:#84b7e6;--note:#243244;--focus:#a6ceff;--tip:#30283f;--bubble-border:#9276b1;--tip-heading:#dbc0fa;--border:#4b5c72}
+body{background:var(--page);color:var(--text)}
+main{background:var(--surface)}
+h1,h2,h3{color:var(--heading)}
+a,nav a{color:var(--link)}
+nav a{border-color:var(--border)}nav a:hover{background:var(--slide)}nav a span{color:var(--text)}
+.subtitle,.badge{color:var(--muted)}
+h2,th,td,.table-container{border-color:var(--border)}
+table{background:var(--surface);color:var(--text)}
+th,.slide{background:var(--slide)}tbody tr:nth-child(even),pre,.note{background:var(--note)}
+blockquote,.note{border-color:var(--accent)}
+button,input,select{color:var(--text);background:var(--surface);border:1px solid var(--border)}
+button:disabled{opacity:.5}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.professor-tip{background:var(--tip)}
+.speech-bubble,.speech-bubble::before{background:var(--surface);border-color:var(--bubble-border)}
+.speech-bubble strong{color:var(--tip-heading)}
+.page-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.theme-controls{display:flex;justify-content:flex-end;margin-bottom:16px}
+.theme-toggle{font:inherit;font-size:.9rem;color:var(--text);background:var(--slide);border:1px solid var(--accent);border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+.theme-toggle:hover{border-color:var(--text)}
+.theme-toggle[aria-pressed="true"]{background:var(--tip);border-color:var(--bubble-border)}
+@media print{
+  :root[data-theme]{color-scheme:light;--page:#fff;--surface:#fff;--text:#202b38;--heading:#164b70;--link:#176196;--muted:#526779;--slide:#eaf1f7;--accent:#3673a5;--note:#f8fafc;--tip:#f7f0ff;--bubble-border:#c5afe0;--tip-heading:#654586;--border:#d4dbe6}
+  .theme-controls,.theme-toggle{display:none}
+}

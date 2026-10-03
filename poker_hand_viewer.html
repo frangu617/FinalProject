@@ -22,8 +22,10 @@
     tbody tr:nth-child(even) { background: #f6f8fb; }
     caption { text-align: left; padding: .8rem; }
   </style>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/theme.js"></script>
 </head>
-<body>
+<body><div class="theme-controls"><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button></div>
   <nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html">Project proposal</a></nav>
   <h1>Explore the poker hand dataset</h1>
   <p>Each row represents five cards and their poker hand category. Labels follow the <a href="https://archive.ics.uci.edu/dataset/158/poker+hand">UCI Poker Hand documentation</a>.</p>
@@ -96,7 +98,7 @@
     }
 
     function setLoading(loading) {
-      document.querySelectorAll('button, input, select').forEach(control => {
+      document.querySelectorAll('button:not(#theme-toggle), input, select').forEach(control => {
         control.disabled = loading;
       });
       byId('first').disabled = loading || state.page <= 1;
