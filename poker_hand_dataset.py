@@ -13,7 +13,6 @@ PAGE_SIZE = 100
 
 def create_handler(data):
     """Serve one page at a time, sorting the full dataset when requested."""
-    viewer_html = Path(__file__).with_name("poker_hand_viewer.html").read_bytes()
     columns = data.columns.tolist()
     # Reuse the sorted dataframe when moving between pages.
     @lru_cache(maxsize=1)
@@ -27,8 +26,17 @@ def create_handler(data):
         def do_GET(self):
             request = urlparse(self.path)
 
-            if request.path == "/":
-                self.respond(viewer_html, "text/html; charset=utf-8")
+            static_files = {
+                "/": ("index.html", "text/html; charset=utf-8"),
+                "/index.html": ("index.html", "text/html; charset=utf-8"),
+                "/poker_hand_viewer.html": ("poker_hand_viewer.html", "text/html; charset=utf-8"),
+                "/poker_hand_analysis_group_reading.html": ("poker_hand_analysis_group_reading.html", "text/html; charset=utf-8"),
+                "/assets/poker-hand-training-true.data": ("assets/poker-hand-training-true.data", "text/plain"),
+                "/assets/poker-hand-testing.data": ("assets/poker-hand-testing.data", "text/plain"),
+            }
+            if request.path in static_files:
+                filename, content_type = static_files[request.path]
+                self.respond(Path(__file__).parent.joinpath(filename).read_bytes(), content_type)
                 return
             if request.path != "/data":
                 self.send_error(404)

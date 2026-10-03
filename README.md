@@ -251,3 +251,12 @@ OpenAI Codex helped with editing the notebook's code and explanations, formattin
 **Final deliverables:** The HTML reading copy is a discussion aid. Prepare the required PDF report with notebook-output appendix and the MP4 presentation for the final submission. Keep the code and README in the team's GitHub repository.
 
 ---
+
+
+## Project navigation and dataset viewer
+
+Open [the project home page](index.html) to choose **Project proposal** or **Explore the dataset**. The dataset viewer runs on a static web server, including GitHub Pages, without the Python dataset script. For local use, run `python -m http.server 8000` from this folder and open `http://localhost:8000/`.
+
+The viewer offers the original training and test files separately, with 100 hands per page and sorting across the selected file. Card suits, ranks, and hand categories use readable names based on [UCI?s Poker Hand documentation](https://archive.ics.uci.edu/dataset/158/poker+hand). Hover over a value for its original code; expand the code guide for all mappings. The larger test file may take a moment to load or sort.
+
+Dataset credit: Cattral, R. & Oppacher, F. (2002). Poker Hand. UCI Machine Learning Repository. https://doi.org/10.24432/C5KW38. Licensed under CC BY 4.0. The files in `assets/` are unmodified copies from the supplied `poker+hand.zip`.
