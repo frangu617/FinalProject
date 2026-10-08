@@ -1,17 +1,124 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Presentation Part 4: Modeling Approach</title>
-<link rel="stylesheet" href="assets/presentation.css"><link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/presentation.css">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/presentation-deck.css">
+<link rel="stylesheet" href="assets/presentation-findings-and-models.css">
 <script src="assets/theme.js"></script>
-</head><body><main>
-<div class="page-toolbar"><nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html#presentation-outline">Presentation outline</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button></div>
-<h1>Part 4: Modeling Approach</h1>
-<p class="subtitle">Presentation placeholder &middot; Planned speaking time: 1.5 minutes</p>
-<aside class="professor-tip" aria-label="Professor tip">
-<img src="assets/chibi-professor.png" alt="Chibi female professor with long black hair, glasses, and a white lab coat" width="110" height="165">
-<div class="speech-bubble"><strong>A little professor tip</strong><p>This is where <em>modeling approach</em> goes.</p></div>
-</aside>
-<section class="slide"><h2>What to cover</h2><p>Describe how the models will be compared fairly once modeling is complete.</p><p>The slide content and speaker notes for this part are still to be added.</p></section>
+<script src="assets/presentation-deck.js" defer></script>
+</head>
+<body class="presentation-deck">
+<main>
+<div class="page-toolbar">
+  <nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html#presentation-outline">Presentation outline</a></nav>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button>
+</div>
+<header class="part-heading">
+  <p class="eyebrow">Poker Hand Classification &middot; Part 4 of 7</p>
+  <h1>Modeling Approach</h1>
+  <p class="subtitle">Three slides &middot; Approximately 1.5 minutes at a steady speaking pace.</p>
+</header>
+<div class="deck-actions" role="group" aria-label="Presentation options">
+  <button id="present-slides" class="primary-action" type="button" aria-pressed="false" aria-controls="slide-deck" hidden>Present slides</button>
+  <button id="toggle-speaker-notes" type="button" aria-pressed="false" aria-controls="notes-model-candidates notes-fair-comparison notes-model-selection" hidden>Speaker notes</button>
+  <button id="fullscreen-slides" type="button" aria-pressed="false" hidden>Full screen</button>
+  <button id="print-slides" type="button" hidden>Print / save PDF</button>
+</div>
+<p id="presentation-status" class="screen-reader-only" role="status" aria-live="polite"></p>
+<noscript><p class="note">All slides are shown below. Open each speaker-notes panel to rehearse.</p></noscript>
+
+<div id="slide-deck" class="slide-deck">
+
+  <section class="slide deck-slide" aria-labelledby="model-candidates-heading">
+    <p class="eyebrow">Slide 1 &middot; The candidates</p>
+    <h2 id="model-candidates-heading" tabindex="-1">Start simple. Compare two learned models.</h2>
+
+    <p class="slide-intro">Three candidates answer the same question: what category do these five cards belong to?</p>
+    <div class="model-cards">
+      <article class="model-card"><span class="model-kind">Reference</span><h3>Majority baseline</h3><p>Always predict the most common training category: high card.</p><small>Shows what learning must improve on</small></article>
+      <article class="model-card"><span class="model-kind">One tree</span><h3>Decision tree</h3><p>Learn a sequence of questions about the encoded cards.</p><small>Maximum depth: 12</small></article>
+      <article class="model-card"><span class="model-kind">Many trees</span><h3>Random forest</h3><p>Combine predictions from many trees trained with randomness.</p><small>200 trees</small></article>
+    </div>
+    <p class="method-note"><strong>For both learned models:</strong> Class weights increase the influence of uncommon categories during fitting.</p>
+    <aside class="professor-tip" aria-label="Professor tip for the candidates">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>The baseline gives learning a meaningful reference. Class weighting changes the influence of existing examples; it does not create new rare hands.</p></div>
+    </aside>
+    <details id="notes-model-candidates" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>We compare three candidates. The majority baseline always predicts the most common training category, high card. It tells us what we gain from learning. A decision tree learns a sequence of questions, while a random forest combines predictions from two hundred trees. Both learned models use class weights to give uncommon categories more influence. Those weights do not create additional examples.</p>
+    </details>
+  </section>
+
+  <section class="slide deck-slide" aria-labelledby="fair-comparison-heading">
+    <p class="eyebrow">Slide 2 &middot; A consistent comparison</p>
+    <h2 id="fair-comparison-heading" tabindex="-1">Compare every candidate under the same conditions.</h2>
+
+    <ol class="comparison-steps">
+      <li><div><h3>Fit on the same 19,918 training hands</h3><p>Each pipeline learns suit and rank category encoding from the training split only.</p></div></li>
+      <li><div><h3>Compare on the same 4,980 validation hands</h3><p>Use the same ten categories and the same primary score: macro F1.</p></div></li>
+      <li><div><h3>Inspect errors and possible overfitting</h3><p>Compare training and validation accuracy; inspect the per-category report and confusion matrix.</p></div></li>
+    </ol>
+    <div class="reproducibility-row"><span><strong>Fixed seed:</strong> 42</span><span><strong>Same encoding:</strong> category indicators</span><span><strong>Same split:</strong> stratified 80/20</span></div>
+    <aside class="professor-tip" aria-label="Professor tip for a consistent comparison">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>Training examples teach the model. Validation examples help compare choices. Fitting the encoder inside the pipeline keeps validation data out of preprocessing.</p></div>
+    </aside>
+    <details id="notes-fair-comparison" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>To compare them fairly, all candidates receive the same training and validation hands, with the same suit and rank encoding. The encoder is fitted using training data only. We use a fixed seed so the split can be reproduced. We also compare training and validation accuracy to look for overfitting, and inspect the confusion matrix to see which categories the model confuses.</p>
+    </details>
+  </section>
+
+  <section class="slide deck-slide" aria-labelledby="model-selection-heading">
+    <p class="eyebrow">Slide 3 &middot; Selection and final evaluation</p>
+    <h2 id="model-selection-heading" tabindex="-1">Look beyond accuracy before final evaluation.</h2>
+
+    <table class="metrics-table">
+      <caption class="screen-reader-only">Metrics used to compare and interpret the classifiers</caption>
+      <thead><tr><th scope="col">Measure</th><th scope="col">What it tells us</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Accuracy</th><td>The proportion of hands assigned the correct category.</td></tr>
+        <tr><th scope="row">Macro F1 <span class="primary-metric">Primary</span></th><td>Balance precision and recall within each category, then average the ten scores equally.</td></tr>
+        <tr><th scope="row">Class-level results</th><td>Precision, recall, and support show which categories work and how many examples support each score.</td></tr>
+      </tbody>
+    </table>
+    <ol class="selection-path">
+      <li><strong>Choose</strong><span>Use validation macro F1</span></li>
+      <li><strong>Refit</strong><span>Use all 24,898 development hands</span></li>
+      <li><strong>Evaluate</strong><span>Use the separate million-row test file</span></li>
+    </ol>
+    <aside class="professor-tip" aria-label="Professor tip for selection and final evaluation">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>Giving each category equal weight does not make a score based on one example reliable. Fix model settings before final testing, and keep test results out of selection.</p></div>
+    </aside>
+    <details id="notes-model-selection" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>Our main selection score is macro F1. It balances precision and recall within each category, then averages those scores equally across categories. We report accuracy and per-category results alongside it, including the number of examples supporting each score. Once settings are fixed, the selected model is refitted on all development hands and evaluated on the separate test file. We keep those final results out of model selection.</p>
+    </details>
+  </section>
+</div>
+
+<nav id="slide-controls" class="slide-controls" aria-label="Slide navigation" hidden>
+  <button id="previous-slide" type="button" aria-controls="slide-deck">&larr; Previous slide</button>
+  <span id="slide-counter">Slide 1 of 3</span>
+  <button id="next-slide" type="button" aria-controls="slide-deck">Next slide &rarr;</button>
+  <small>Use &larr; / &rarr; to move &middot; Esc to exit</small>
+</nav>
+<footer class="source-footer">
+  <h2>Sources and presentation notes</h2>
+
+  <p>Implementation and initial validation outputs: <a href="poker_hand_model_training.ipynb" download>the training notebook</a>. Candidate settings are a majority-class baseline, a decision tree with maximum depth 12 and balanced class weights, and a 200-tree random forest with weights balanced within each bootstrap sample. All use one-hot category encoding; the original positional card inputs are retained.</p>
+  <p>The notebook compares one reproducible stratified split and selects the highest validation macro F1 across all ten labels. Undefined class-level scores are displayed as zero. Very small class counts make that comparison uncertain; these initial settings and one split do not establish an optimal model.</p>
+  <p>Optional final evaluation refits the selected pipeline and reports both the full supplied test file and test records whose unordered hand was absent from development. Earlier descriptive summaries included both files. Final test results should stay out of model selection.</p>
+  <p>Method references: <a href="https://scikit-learn.org/stable/common_pitfalls.html">scikit-learn guidance on data leakage</a>, <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">random forest classifier</a>, and <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html">classification metrics and support</a>. Measured model results belong in Part 5.</p>
+  <p class="subtitle">Professor tips are rehearsal guidance, separate from the spoken script. Print / save PDF produces the slides without speaker notes.</p>
+</footer>
 <nav class="presentation-sequence" aria-label="Presentation parts"><a href="presentation_part3_main_exploratory_finding.html">&larr; Part 3: Main Exploratory Finding</a> &middot; <a href="index.html">All presentation parts</a> &middot; <a href="presentation_part5_results_and_limitations.html">Part 5: Results and Limitations &rarr;</a></nav>
-</main></body></html>
+</main>
+</body>
+</html>

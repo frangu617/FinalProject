@@ -1,17 +1,99 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Presentation Part 3: Main Exploratory Finding</title>
-<link rel="stylesheet" href="assets/presentation.css"><link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/presentation.css">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/presentation-deck.css">
+<link rel="stylesheet" href="assets/presentation-findings-and-models.css">
 <script src="assets/theme.js"></script>
-</head><body><main>
-<div class="page-toolbar"><nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html#presentation-outline">Presentation outline</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button></div>
-<h1>Part 3: Main Exploratory Finding</h1>
-<p class="subtitle">Presentation placeholder &middot; Planned speaking time: 1 minute</p>
-<aside class="professor-tip" aria-label="Professor tip">
-<img src="assets/chibi-professor.png" alt="Chibi female professor with long black hair, glasses, and a white lab coat" width="110" height="165">
-<div class="speech-bubble"><strong>A little professor tip</strong><p>This is where <em>main exploratory finding</em> goes.</p></div>
-</aside>
-<section class="slide"><h2>What to cover</h2><p>Explain why common hands dominate and rare hands make evaluation difficult.</p><p>The slide content and speaker notes for this part are still to be added.</p></section>
+<script src="assets/presentation-deck.js" defer></script>
+</head>
+<body class="presentation-deck">
+<main>
+<div class="page-toolbar">
+  <nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html#presentation-outline">Presentation outline</a></nav>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button>
+</div>
+<header class="part-heading">
+  <p class="eyebrow">Poker Hand Classification &middot; Part 3 of 7</p>
+  <h1>Main Exploratory Finding</h1>
+  <p class="subtitle">Two slides &middot; Approximately 1 minute at a steady speaking pace.</p>
+</header>
+<div class="deck-actions" role="group" aria-label="Presentation options">
+  <button id="present-slides" class="primary-action" type="button" aria-pressed="false" aria-controls="slide-deck" hidden>Present slides</button>
+  <button id="toggle-speaker-notes" type="button" aria-pressed="false" aria-controls="notes-category-share notes-accuracy-context" hidden>Speaker notes</button>
+  <button id="fullscreen-slides" type="button" aria-pressed="false" hidden>Full screen</button>
+  <button id="print-slides" type="button" hidden>Print / save PDF</button>
+</div>
+<p id="presentation-status" class="screen-reader-only" role="status" aria-live="polite"></p>
+<noscript><p class="note">All slides are shown below. Open each speaker-notes panel to rehearse.</p></noscript>
+
+<div id="slide-deck" class="slide-deck">
+
+  <section class="slide deck-slide" aria-labelledby="category-share-heading">
+    <p class="eyebrow">Slide 1 &middot; Category imbalance</p>
+    <h2 id="category-share-heading" tabindex="-1">Two categories account for almost every hand.</h2>
+
+    <p class="slide-intro">Descriptive counts across both supplied files &middot; <strong>1,025,010 records</strong>.</p>
+    <div class="finding-highlight"><strong>92.37%</strong><p>of records are <strong>high card or one pair</strong>.<span>The other eight categories share just 7.63%.</span></p></div>
+    <figure class="category-chart">
+      <img src="assets/poker-hand-category-share.svg" alt="Category shares: high card, 513,702 records or 50.12%; one pair, 433,097 records or 42.25%; other eight categories, 78,211 records or 7.63%.">
+      <figcaption>Combined supplied files, before training deduplication. These are dataset frequencies.</figcaption>
+    </figure>
+    <ul class="mobile-chart-summary">
+      <li>High card: <strong>50.12%</strong> &middot; 513,702 records</li>
+      <li>One pair: <strong>42.25%</strong> &middot; 433,097 records</li>
+      <li>Other eight: <strong>7.63%</strong> &middot; 78,211 records</li>
+    </ul>
+    <aside class="professor-tip" aria-label="Professor tip for category imbalance">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>Say &ldquo;about 92 out of every 100 records.&rdquo; The chart describes the data; it does not show how accurately a model predicts.</p></div>
+    </aside>
+    <details id="notes-category-share" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>Our main exploratory finding is the imbalance between hand categories. Across the combined supplied files, high-card hands and one-pair hands account for about ninety-two percent of records. All eight other categories share the remaining eight percent. The chart shows how often categories occur in this dataset. These frequencies describe the examples available to us; they are not model performance results.</p>
+    </details>
+  </section>
+
+  <section class="slide deck-slide" aria-labelledby="accuracy-context-heading">
+    <p class="eyebrow">Slide 2 &middot; Why accuracy needs context</p>
+    <h2 id="accuracy-context-heading" tabindex="-1">An easy accuracy score can hide difficult hands.</h2>
+
+    <div class="reference-score"><div><span class="metric-label">Descriptive reference &middot; Combined files</span><strong>50.12%</strong></div><p>Always guessing <strong>high card</strong> would be correct about half the time.</p></div>
+    <div class="rare-grid">
+      <p><strong>8</strong><span>Royal-flush records in the combined supplied files</span></p>
+      <p><strong>1</strong><span>Royal-flush hand in our validation split</span></p>
+    </div>
+    <p class="method-note"><strong>Evaluation needs more than accuracy:</strong> Examine macro F1, per-category precision and recall, and the number of examples behind each score.</p>
+    <aside class="professor-tip" aria-label="Professor tip for why accuracy needs context">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>With just one validation royal flush, its recall can be 0% or 100%. Always explain how many examples support a rare-category score.</p></div>
+    </aside>
+    <details id="notes-accuracy-context" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>That imbalance makes overall accuracy easy to misread. Always guessing high card would be correct about half the time in the combined files, even while missing every other category. There are only eight royal-flush records across those files. After preparation, only one royal flush appears in validation. Its result cannot establish reliability. We therefore need category-level scores alongside accuracy. Next, we will explain how we compare the models.</p>
+    </details>
+  </section>
+</div>
+
+<nav id="slide-controls" class="slide-controls" aria-label="Slide navigation" hidden>
+  <button id="previous-slide" type="button" aria-controls="slide-deck">&larr; Previous slide</button>
+  <span id="slide-counter">Slide 1 of 2</span>
+  <button id="next-slide" type="button" aria-controls="slide-deck">Next slide &rarr;</button>
+  <small>Use &larr; / &rarr; to move &middot; Esc to exit</small>
+</nav>
+<footer class="source-footer">
+  <h2>Sources and presentation notes</h2>
+
+  <p>Dataset: <a href="https://archive.ics.uci.edu/dataset/158/poker+hand">UCI Poker Hand</a>, Cattral, R. &amp; Oppacher, F. (2002), DOI: <a href="https://doi.org/10.24432/C5KW38">10.24432/C5KW38</a>. Counts were recomputed from the supplied <code>poker+hand.zip</code> and agree with <a href="poker_hand_analysis_group_reading.html">the exploratory reading draft</a>. The chart groups the ten recorded categories into three groups and uses a linear percentage scale.</p>
+  <p>The combined-file counts include the original records in both files. The 50.12% reference is a calculation from those frequencies, separate from held-out baseline performance. The training and validation split is documented in <a href="poker_hand_model_training.ipynb" download>the training notebook</a>: five supplied royal-flush training rows become four distinct development hands, with three assigned to training and one to validation.</p>
+  <p>Earlier descriptive exploration included the test file. Model selection uses validation results. The notebook reports scores for all ten categories, and rare-category support must accompany interpretation.</p>
+  <p class="subtitle">Professor tips are rehearsal guidance, separate from the spoken script. Print / save PDF produces the slides without speaker notes.</p>
+</footer>
 <nav class="presentation-sequence" aria-label="Presentation parts"><a href="presentation_part2_data_and_preparation.html">&larr; Part 2: Data and Preparation</a> &middot; <a href="index.html">All presentation parts</a> &middot; <a href="presentation_part4_modeling_approach.html">Part 4: Modeling Approach &rarr;</a></nav>
-</main></body></html>
+</main>
+</body>
+</html>

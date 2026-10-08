@@ -1,0 +1,5 @@
+# Local Python environment and generated notebook files.
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/

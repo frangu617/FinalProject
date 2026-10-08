@@ -1,17 +1,124 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Presentation Part 2: Data and Preparation</title>
-<link rel="stylesheet" href="assets/presentation.css"><link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/presentation.css">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/presentation-deck.css">
 <script src="assets/theme.js"></script>
-</head><body><main>
-<div class="page-toolbar"><nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html#presentation-outline">Presentation outline</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button></div>
-<h1>Part 2: Data and Preparation</h1>
-<p class="subtitle">Presentation placeholder &middot; Planned speaking time: 1.5 minutes</p>
-<aside class="professor-tip" aria-label="Professor tip">
-<img src="assets/chibi-professor.png" alt="Chibi female professor with long black hair, glasses, and a white lab coat" width="110" height="165">
-<div class="speech-bubble"><strong>A little professor tip</strong><p>This is where <em>data and preparation</em> goes.</p></div>
-</aside>
-<section class="slide"><h2>What to cover</h2><p>Explain the dataset and the checks needed to make it trustworthy.</p><p>The slide content and speaker notes for this part are still to be added.</p></section>
+<script src="assets/presentation-deck.js" defer></script>
+</head>
+<body class="presentation-deck data-preparation">
+<main>
+<div class="page-toolbar">
+  <nav aria-label="Project navigation"><a href="index.html">Project home</a> &middot; <a href="poker_hand_analysis_group_reading.html#presentation-outline">Presentation outline</a></nav>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" hidden>Dark mode</button>
+</div>
+<header class="part-heading">
+  <p class="eyebrow">Poker Hand Classification &middot; Part 2 of 7</p>
+  <h1>Data and Preparation</h1>
+  <p class="subtitle">Three slides &middot; Approximately 1.5 minutes at a steady speaking pace.</p>
+</header>
+<div class="deck-actions" role="group" aria-label="Presentation options">
+  <button id="present-slides" class="primary-action" type="button" aria-pressed="false" aria-controls="slide-deck" hidden>Present slides</button>
+  <button id="toggle-speaker-notes" type="button" aria-pressed="false" aria-controls="notes-data notes-cleaning notes-split" hidden>Speaker notes</button>
+  <button id="fullscreen-slides" type="button" aria-pressed="false" hidden>Full screen</button>
+  <button id="print-slides" type="button" hidden>Print / save PDF</button>
+</div>
+<p id="presentation-status" class="screen-reader-only" role="status" aria-live="polite"></p>
+<noscript><p class="note">All three slides are shown below. Open each speaker-notes panel to rehearse.</p></noscript>
+
+<div id="slide-deck" class="slide-deck">
+  <section class="slide deck-slide" aria-labelledby="slide-data-heading">
+    <p class="eyebrow">Slide 1 &middot; The dataset</p>
+    <h2 id="slide-data-heading" tabindex="-1">Five cards in. One category out.</h2>
+    <p class="slide-intro">The UCI Poker Hand dataset contains <strong>1,025,010 labeled hands</strong> across the supplied training and test files.</p>
+    <figure class="hand-example" aria-labelledby="example-caption">
+      <div class="cards">
+        <span class="poker-card red-card" role="img" aria-label="Ten of hearts"><span class="card-rank" aria-hidden="true">10</span><span class="card-suit" aria-hidden="true">&hearts;</span></span>
+        <span class="poker-card" role="img" aria-label="Ten of spades"><span class="card-rank" aria-hidden="true">10</span><span class="card-suit" aria-hidden="true">&spades;</span></span>
+        <span class="poker-card red-card" role="img" aria-label="Two of diamonds"><span class="card-rank" aria-hidden="true">2</span><span class="card-suit" aria-hidden="true">&diams;</span></span>
+        <span class="poker-card" role="img" aria-label="Seven of clubs"><span class="card-rank" aria-hidden="true">7</span><span class="card-suit" aria-hidden="true">&clubs;</span></span>
+        <span class="poker-card red-card" role="img" aria-label="King of hearts"><span class="card-rank" aria-hidden="true">K</span><span class="card-suit" aria-hidden="true">&hearts;</span></span>
+      </div>
+      <div class="hand-result"><span class="example-arrow" aria-hidden="true">&rarr;</span><div><small>Correct category</small><strong>One pair</strong></div></div>
+      <figcaption id="example-caption">Illustrative hand from the training notebook&rsquo;s prediction example.</figcaption>
+    </figure>
+    <div class="feature-facts">
+      <p><strong>10 inputs</strong><span>Suit and rank for each of five cards</span></p>
+      <p><strong>1 target</strong><span>One of ten categories, coded 0&ndash;9</span></p>
+    </div>
+    <aside class="professor-tip" aria-label="Professor tip for explaining the dataset">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>Point to the two tens. Explain that the model receives the cards and learns to name the hand. Keep the correct category separate from its inputs.</p></div>
+    </aside>
+    <details id="notes-data" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>Our data comes from the UCI Poker Hand dataset. Every row describes five cards, giving us a suit and rank for each card, plus the correct hand category. That means ten inputs and one answer. The example here contains a pair of tens, so the answer is one pair. The supplied files contain just over one million labeled hands.</p>
+    </details>
+  </section>
+
+  <section class="slide deck-slide" aria-labelledby="slide-cleaning-heading">
+    <p class="eyebrow">Slide 2 &middot; Preparation checks</p>
+    <h2 id="slide-cleaning-heading" tabindex="-1">Check the cards. Remove repeated hands.</h2>
+    <div class="cleanup-counts" aria-label="Training preparation: 25,010 records minus 112 duplicate copies leaves 24,898 distinct hands">
+      <p><strong>25,010</strong><span>Supplied training records</span></p>
+      <p><strong>&minus;112</strong><span>Extra copies of the same hand</span></p>
+      <p class="prepared-total"><strong>24,898</strong><span>Distinct development hands</span></p>
+    </div>
+    <ul class="preparation-checks">
+      <li><strong>Complete, valid records</strong><span>No missing values, invalid codes, or repeated cards within a training hand.</span></li>
+      <li><strong>Consistent labels</strong><span>Identical unordered training hands have the same recorded category.</span></li>
+      <li><strong>One copy per hand</strong><span>Ignore card order when removing repeated training records.</span></li>
+    </ul>
+    <aside class="professor-tip" aria-label="Professor tip for explaining duplicate hands">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>Shuffle these five cards and the hand is still the same. Removing extra copies before splitting keeps that hand from appearing in both training and validation.</p></div>
+    </aside>
+    <details id="notes-cleaning" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>Before modeling, we checked the training records for missing values, valid codes, repeated cards within a hand, and conflicting labels. Those checks passed. We treated the same five cards in a different order as the same hand. Removing one hundred and twelve extra copies left almost twenty-five thousand distinct hands. This keeps duplicate hands from appearing in both training and validation.</p>
+    </details>
+  </section>
+
+  <section class="slide deck-slide" aria-labelledby="slide-split-heading">
+    <p class="eyebrow">Slide 3 &middot; A fair comparison</p>
+    <h2 id="slide-split-heading" tabindex="-1">Give learning and evaluation separate roles.</h2>
+    <p class="split-caption">Split the <strong>24,898 distinct development hands</strong>, preserving category proportions.</p>
+    <div class="development-split" aria-label="80 percent for training: 19,918 hands. 20 percent for validation: 4,980 hands.">
+      <div class="training-set"><span class="split-role">Training &middot; 80%</span><strong>19,918</strong><span>Fit the models</span></div>
+      <div class="validation-set"><span class="split-role">Validation &middot; 20%</span><strong>4,980</strong><span>Compare models and choose settings</span></div>
+    </div>
+    <div class="test-set"><div><span class="split-role">Supplied test file &middot; Separate final evaluation</span><strong>1,000,000 hands</strong></div><p>Use after the model and evaluation procedure are fixed.</p></div>
+    <p class="encoding-note"><strong>Prepare the inputs:</strong> Suit and rank codes become category indicators, using an encoder fitted on the training split.</p>
+    <aside class="professor-tip" aria-label="Professor tip about rare hands">
+      <img src="assets/chibi-professor.png" alt="Chibi professor with long black hair, glasses, and a white lab coat" width="110" height="165">
+      <div class="speech-bubble"><strong>A little professor tip</strong><p>Only <strong class="inline-emphasis">four distinct royal flushes</strong> remain in development. One correct rare-hand prediction is too little evidence to claim reliable performance.</p></div>
+    </aside>
+    <details id="notes-split" class="speaker-notes">
+      <summary>Speaker notes &middot; About 30 seconds</summary>
+      <p>We used eighty percent for training and twenty percent for validation, preserving category proportions. The supplied test file is reserved for final evaluation, although earlier descriptive summaries included it. Suit and rank categories are encoded within the training pipeline. These steps improve our comparison, but rare hands remain a limitation: we have only four distinct royal flushes. Next, we will look at the imbalance between common and rare hands.</p>
+    </details>
+  </section>
+</div>
+
+<nav id="slide-controls" class="slide-controls" aria-label="Slide navigation" hidden>
+  <button id="previous-slide" type="button" aria-controls="slide-deck">&larr; Previous slide</button>
+  <span id="slide-counter">Slide 1 of 3</span>
+  <button id="next-slide" type="button" aria-controls="slide-deck">Next slide &rarr;</button>
+  <small>Use &larr; / &rarr; to move &middot; Esc to exit</small>
+</nav>
+
+<footer class="source-footer">
+  <h2>Sources and preparation notes</h2>
+  <p>Dataset definitions: <a href="https://archive.ics.uci.edu/dataset/158/poker+hand">UCI Machine Learning Repository &mdash; Poker Hand</a>. Cattral, R. &amp; Oppacher, F. (2002). DOI: <a href="https://doi.org/10.24432/C5KW38">10.24432/C5KW38</a>.</p>
+  <p>Preparation counts and checks were verified using <a href="poker_hand_model_training.ipynb" download>the training notebook</a>. The reproducible split uses a random seed of 42. Valid code ranges are suits 1&ndash;4, ranks 1&ndash;13, and categories 0&ndash;9. Duplicate checks compare the same five cards regardless of order; they do not group different hands related by renaming suits. The retained card order is still used by the models.</p>
+  <p>Both supplied files were included in earlier descriptive exploration. Test results stay out of model selection; the notebook&rsquo;s full test evaluation is disabled by default and checks overlap with development hands when enabled. Label consistency was checked for identical training hands; a complete audit against poker rules remains a separate step.</p>
+  <p class="subtitle">Professor tips are rehearsal guidance, separate from the spoken script. Print / save PDF produces the three slides without speaker notes.</p>
+</footer>
 <nav class="presentation-sequence" aria-label="Presentation parts"><a href="presentation_part1_goals_and_relevance.html">&larr; Part 1: Goal and Relevance</a> &middot; <a href="index.html">All presentation parts</a> &middot; <a href="presentation_part3_main_exploratory_finding.html">Part 3: Main Exploratory Finding &rarr;</a></nav>
-</main></body></html>
+</main>
+</body>
+</html>

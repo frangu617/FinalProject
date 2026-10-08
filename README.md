@@ -20,14 +20,14 @@ Run this command from the project folder, then open `http://localhost:8000/`. Ke
 | [Project proposal](poker_hand_analysis_group_reading.html) | Group reading draft with initial findings and the proposed analysis. |
 | [Explore the dataset](poker_hand_viewer.html) | Browse and sort training or test records with readable card and hand labels. |
 | [Part 1: Goal and Relevance](presentation_part1_goals_and_relevance.html) | Draft introduction and 268-word speaker script, approximately 1.5-2 minutes. |
-| [Part 2: Data and Preparation](presentation_part2_data_and_preparation.html) | Placeholder for the dataset and preparation checks. |
-| [Part 3: Main Exploratory Finding](presentation_part3_main_exploratory_finding.html) | Placeholder for common versus rare hands and class imbalance. |
-| [Part 4: Modeling Approach](presentation_part4_modeling_approach.html) | Placeholder for a fair comparison of models. |
+| [Part 2: Data and Preparation](presentation_part2_data_and_preparation.html) | Three slides with verified preparation counts, a training/validation diagram, speaker notes, and professor tips; approximately 1.5 minutes. |
+| [Part 3: Main Exploratory Finding](presentation_part3_main_exploratory_finding.html) | Two slides with a verified category-share chart, rare-hand context, speaker notes, and professor tips; approximately 1 minute. |
+| [Part 4: Modeling Approach](presentation_part4_modeling_approach.html) | Three slides covering the baseline, decision tree, random forest, validation metrics, and final evaluation procedure; approximately 1.5 minutes. |
 | [Part 5: Results and Limitations](presentation_part5_results_and_limitations.html) | Placeholder for measured results, errors, and uncertainty. |
 | [Part 6: Recommendations](presentation_part6_recommendations.html) | Placeholder for conclusions and next steps supported by the results. |
 | [Part 7: Contributions Slide](presentation_part7_contributions.html) | Placeholder for each member's name and specific contributions. |
 
-The presentation pages have previous/next navigation and a chibi professor with speech bubbles. Part 1 includes rehearsal tips; Parts 2-7 mark where future content belongs. The group reading's presentation outline also links to each part. Professor tips are separate from the spoken script.
+The presentation pages have previous/next navigation and a chibi professor with speech bubbles. Part 1 includes rehearsal tips. Parts 2-4 share a presentation mode, arrow-key navigation, optional full screen, expandable speaker notes, and a Print / save PDF button. Parts 5-7 mark where future content belongs. The group reading's presentation outline also links to each part. Professor tips are separate from the spoken script.
 
 Every page includes a **Dark mode** toggle. The first visit follows your system preference, and your choice is saved in the browser and shared across pages on the same site. Printing uses a light theme. Use the local server for consistent navigation, theme persistence, and dataset loading.
 
