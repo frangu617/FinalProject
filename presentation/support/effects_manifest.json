@@ -1,0 +1,537 @@
+[
+  {
+    "slide": 1,
+    "title": "Poker Hand Classification",
+    "speaker": "Francisco",
+    "reveal_clicks": 0,
+    "groups": [],
+    "labels": [],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 20 seconds plus brief reveal pauses\nREVEALS: 0; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[NO CONTENT BUILDS \u2014 keep this slide visible while speaking.]\nHello, we are Francisco Gutierrez and Lilian Kim. Our project asks how well classification models recognize five-card poker hands, especially when some categories are much more common than others. I will cover the data and modeling setup, and Lilian will explain the results and what they mean.\n\n[NEXT SLIDE \u2014 after the final sentence, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 2,
+    "title": "Table of Contents",
+    "speaker": "Francisco",
+    "reveal_clicks": 0,
+    "groups": [],
+    "labels": [],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 15 seconds plus brief reveal pauses\nREVEALS: 0; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[NO CONTENT BUILDS \u2014 keep this slide visible while speaking.]\nWe will follow the analysis from the research question through data preparation, exploration, model selection, and evaluation. We will show short code excerpts along the way, then close with limitations and recommendations.\n\n[NEXT SLIDE \u2014 after the final sentence, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 3,
+    "title": "Introduction",
+    "speaker": "Francisco",
+    "reveal_clicks": 3,
+    "groups": [
+      [
+        [
+          170,
+          0
+        ]
+      ],
+      [
+        [
+          170,
+          1
+        ]
+      ],
+      [
+        [
+          170,
+          2
+        ]
+      ]
+    ],
+    "labels": [
+      "Goal: classify five-card hands into ten categories.",
+      "Motivation: explore applications of statistics beyond our work in medical research.",
+      "Why UCI Poker Hand? Clear labels and common / rare categories let us study class imbalance."
+    ],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 35 seconds plus brief reveal pauses\nREVEALS: 3; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in Goal: classify five-card hands into ten categories. Wait 0.5 seconds, then speak.]\nOur goal is to classify a supplied five-card hand into one of ten categories. We are not predicting future cards or an opponent's hidden cards.\n\n[CLICK 2 \u2014 fade in Motivation: explore applications of statistics beyond our work in medical research. Wait 0.5 seconds, then speak.]\nOur experience with statistics has often centered on medical research. Poker gives us a different setting in which to apply the same ideas.\n\n[CLICK 3 \u2014 fade in Why UCI Poker Hand? Clear labels and common / rare categories let us study class imbalance. Wait 0.5 seconds, then speak.]\nWe chose the UCI dataset because its known labels and mix of common and rare hands let us study class imbalance. Our main question is how performance differs between these categories. Because rules determine the correct category, we can also ask what a statistical model actually learns.\n\n[NEXT SLIDE \u2014 after the final sentence and all 3 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_analysis.ipynb, saved descriptive outputs"
+  },
+  {
+    "slide": 4,
+    "title": "What does one record contain?",
+    "speaker": "Francisco",
+    "reveal_clicks": 1,
+    "groups": [
+      [
+        [
+          179,
+          null
+        ]
+      ]
+    ],
+    "labels": [
+      "the five-card record example"
+    ],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 30 seconds plus brief reveal pauses\nREVEALS: 1; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in the five-card record example. Wait 0.5 seconds; pause 1 second before explaining.]\nEach hand has ten inputs: a suit and a rank for each of five cards. The target is a separate category code. In this example, two cards have rank ten, so the correct category is one pair. Suit numbers identify categories, not strength. We keep the target out of the inputs. The raw representation also gives each card a position, which matters later when we discuss limitations.\n\n[NEXT SLIDE \u2014 after the final sentence and all 1 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 5,
+    "title": "Data Loading and Preparation",
+    "speaker": "Francisco",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          184,
+          0
+        ]
+      ],
+      [
+        [
+          184,
+          1
+        ]
+      ],
+      [
+        [
+          184,
+          2
+        ]
+      ],
+      [
+        [
+          184,
+          3
+        ]
+      ]
+    ],
+    "labels": [
+      "25,010 training records; 1,000,000 supplied test records.",
+      "Remove 112 repeated unordered hands.",
+      "Split 24,898 distinct hands: 19,918 training / 4,980 validation.",
+      "One-hot encode suits and ranks."
+    ],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 40 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in 25,010 training records; 1,000,000 supplied test records. Wait 0.5 seconds, then speak.]\nThe supplied files contain twenty-five thousand and ten training records and one million test records. Training records pass checks for missing values, valid codes, and repeated cards within a hand.\n\n[CLICK 2 \u2014 fade in Remove 112 repeated unordered hands. Wait 0.5 seconds, then speak.]\nWe identify the same five cards even when their order changes. Removing one hundred and twelve repeated hands leaves twenty-four thousand eight hundred and ninety-eight distinct development hands.\n\n[CLICK 3 \u2014 fade in Split 24,898 distinct hands: 19,918 training / 4,980 validation. Wait 0.5 seconds, then speak.]\nWe split these into nineteen thousand nine hundred and eighteen training hands and four thousand nine hundred and eighty validation hands. The supplied test file stays separate from fitting and model selection.\n\n[CLICK 4 \u2014 fade in One-hot encode suits and ranks. Wait 0.5 seconds, then speak.]\nWe one-hot encode suits and ranks so their codes are treated as discrete values. The encoder learns only from the training split.\n\n[NEXT SLIDE \u2014 after the final sentence and all 4 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 6,
+    "title": "Code: prevent the same hand crossing the split",
+    "speaker": "Francisco",
+    "reveal_clicks": 1,
+    "groups": [
+      [
+        [
+          193,
+          null
+        ]
+      ]
+    ],
+    "labels": [
+      "the preparation code"
+    ],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 35 seconds plus brief reveal pauses\nREVEALS: 1; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in the preparation code. Wait 0.5 seconds; pause 1 second before explaining.]\nThis excerpt shows the essential preparation steps. The helper creates a key for the five-card set, ignoring order. We keep the first occurrence, separate the inputs from the target, and make an eighty-twenty stratified split with a fixed random seed. Stratification approximately preserves the category proportions. The full notebook also checks label conflicts and verifies that training and validation keys do not overlap. This prevents identical-card-set leakage, although it does not group hands related by renaming suits.\n\n[NEXT SLIDE \u2014 after the final sentence and all 1 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 7,
+    "title": "Exploratory Data Analysis",
+    "speaker": "Francisco",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          198,
+          0
+        ]
+      ],
+      [
+        [
+          198,
+          1
+        ]
+      ],
+      [
+        [
+          198,
+          2
+        ]
+      ],
+      [
+        [
+          198,
+          3
+        ]
+      ]
+    ],
+    "labels": [
+      "High card: 50.12%; one pair: 42.25%.",
+      "Together: 92.37% of combined records.",
+      "Only 8 royal flush records.",
+      "Accuracy alone can hide rare-hand failures."
+    ],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 25 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in High card: 50.12%; one pair: 42.25%. Wait 0.5 seconds, then speak.]\nThe main exploratory finding is severe class imbalance. High card represents about fifty percent of the combined files, and one pair represents about forty-two percent.\n\n[CLICK 2 \u2014 fade in Together: 92.37% of combined records. Wait 0.5 seconds, then speak.]\nTogether, they account for more than ninety-two percent of records.\n\n[CLICK 3 \u2014 fade in Only 8 royal flush records. Wait 0.5 seconds, then speak.]\nThere are only eight royal-flush records. These are descriptive frequencies across both supplied files, not held-out model results. We disclose that the test file was included in that earlier descriptive exploration.\n\n[CLICK 4 \u2014 fade in Accuracy alone can hide rare-hand failures. Wait 0.5 seconds, then speak.]\nA model can score reasonably well on accuracy while missing uncommon hands. That is why we need metrics that examine all ten categories.\n\n[NEXT SLIDE \u2014 after the final sentence and all 4 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_analysis.ipynb, saved descriptive outputs"
+  },
+  {
+    "slide": 8,
+    "title": "Most records belong to just two categories",
+    "speaker": "Francisco",
+    "reveal_clicks": 1,
+    "groups": [
+      [
+        [
+          205,
+          null
+        ]
+      ]
+    ],
+    "labels": [
+      "the class-distribution chart"
+    ],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 30 seconds plus brief reveal pauses\nREVEALS: 1; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in the class-distribution chart. Wait 0.5 seconds; allow 2 seconds for the audience to inspect the chart.]\nThe logarithmic axis makes the rare categories visible. It changes the spacing, not the counts. There are over five hundred thousand high-card records but only eight royal-flush records in the combined files. This means a model can score reasonably well on accuracy while missing uncommon hands. We therefore need a measure that gives each category equal weight, and we need to inspect how many examples support each score.\n\n[NEXT SLIDE \u2014 after the final sentence and all 1 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_analysis.ipynb, saved descriptive outputs"
+  },
+  {
+    "slide": 9,
+    "title": "Model Selection",
+    "speaker": "Francisco",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          211,
+          0
+        ]
+      ],
+      [
+        [
+          211,
+          1
+        ]
+      ],
+      [
+        [
+          211,
+          2
+        ]
+      ],
+      [
+        [
+          211,
+          3
+        ]
+      ]
+    ],
+    "labels": [
+      "Majority baseline: always predict high card.",
+      "Decision tree: a simple learned comparison.",
+      "Random forest: 200 trees.",
+      "Select by validation macro F1; inspect accuracy and class-level metrics."
+    ],
+    "notes": "SPEAKER: Francisco\nREHEARSAL TARGET: 40 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in Majority baseline: always predict high card. Wait 0.5 seconds, then speak.]\nWe compare three candidates on the same validation split. Our reference is a majority baseline that always predicts high card.\n\n[CLICK 2 \u2014 fade in Decision tree: a simple learned comparison. Wait 0.5 seconds, then speak.]\nThe decision tree is a depth-limited learned comparison.\n\n[CLICK 3 \u2014 fade in Random forest: 200 trees. Wait 0.5 seconds, then speak.]\nThe random forest combines two hundred trees. Class weighting increases the influence of uncommon categories but does not create examples. Both learned models use one-hot encoding fitted on training data.\n\n[CLICK 4 \u2014 fade in Select by validation macro F1; inspect accuracy and class-level metrics. Wait 0.5 seconds, then speak.]\nWe select using macro F1, which averages F1 across all ten categories, and also report accuracy and class-level results. Lilian will now explain the implementation and findings.\n\n[HANDOFF \u2014 look toward Lilian and pause 1 second. Advance once; Lilian triggers the next slide's code reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 10,
+    "title": "Code: fit the encoder and classifier together",
+    "speaker": "Lilian",
+    "reveal_clicks": 1,
+    "groups": [
+      [
+        [
+          220,
+          null
+        ]
+      ]
+    ],
+    "labels": [
+      "the model pipeline code"
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 35 seconds plus brief reveal pauses\nREVEALS: 1; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in the model pipeline code. Wait 0.5 seconds; pause 1 second before explaining.]\nThank you, Francisco. This pipeline keeps preprocessing and the classifier together. Calling fit on the training split learns both the encoder and the forest. We then predict the separate validation inputs. The macro F1 calculation includes all ten labels, so categories with no successful predictions still count. These are the forest settings used in the saved notebook. The other candidates use the same split and evaluation procedure, allowing a consistent comparison.\n\n[NEXT SLIDE \u2014 after the final sentence and all 1 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 11,
+    "title": "Model Analysis",
+    "speaker": "Lilian",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          225,
+          0
+        ]
+      ],
+      [
+        [
+          225,
+          1
+        ]
+      ],
+      [
+        [
+          225,
+          2
+        ]
+      ],
+      [
+        [
+          225,
+          3
+        ]
+      ]
+    ],
+    "labels": [
+      "Random forest selected by macro F1.",
+      "Validation accuracy: 60.56%.",
+      "Validation macro F1: 0.1194.",
+      "100% training accuracy suggests overfitting."
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 30 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in Random forest selected by macro F1. Wait 0.5 seconds, then speak.]\nThe random forest has the highest validation macro F1 among these candidates, so the notebook selects it.\n\n[CLICK 2 \u2014 fade in Validation accuracy: 60.56%. Wait 0.5 seconds, then speak.]\nIts validation accuracy is sixty point five six percent.\n\n[CLICK 3 \u2014 fade in Validation macro F1: 0.1194. Wait 0.5 seconds, then speak.]\nHowever, macro F1 is only zero point one one nine four. That is a warning that performance is uneven across categories.\n\n[CLICK 4 \u2014 fade in 100% training accuracy suggests overfitting. Wait 0.5 seconds, then speak.]\nTraining accuracy is one hundred percent. The large training-to-validation gap suggests overfitting. Selection means the strongest of these three candidates on this one split, not an established reliable classifier across all categories.\n\n[NEXT SLIDE \u2014 after the final sentence and all 4 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 12,
+    "title": "Validation Results",
+    "speaker": "Lilian",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          234,
+          null
+        ],
+        [
+          235,
+          null
+        ],
+        [
+          236,
+          null
+        ]
+      ],
+      [
+        [
+          237,
+          null
+        ],
+        [
+          238,
+          null
+        ],
+        [
+          239,
+          null
+        ]
+      ],
+      [
+        [
+          240,
+          null
+        ],
+        [
+          241,
+          null
+        ],
+        [
+          242,
+          null
+        ]
+      ],
+      [
+        [
+          243,
+          null
+        ]
+      ]
+    ],
+    "labels": [
+      "the majority-baseline row",
+      "the decision-tree row",
+      "the random-forest row",
+      "the +10.60 percentage-point takeaway"
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 25 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in the majority-baseline row Wait 0.5 seconds, then speak.]\nThe majority baseline reaches forty-nine point nine six percent accuracy, with macro F1 of zero point zero six six six.\n\n[CLICK 2 \u2014 fade in the decision-tree row Wait 0.5 seconds, then speak.]\nThe decision tree has lower accuracy, twenty-two point five seven percent, but higher macro F1 of zero point zero eight three seven. This shows why the two metrics can rank models differently.\n\n[CLICK 3 \u2014 fade in the random-forest row Wait 0.5 seconds, then speak.]\nThe forest leads on both measures: sixty point five six percent accuracy and macro F1 of zero point one one nine four.\n\n[CLICK 4 \u2014 fade in the +10.60 percentage-point takeaway Wait 0.5 seconds, then speak.]\nIts accuracy exceeds the baseline by ten point six percentage points. All these numbers come from the four thousand nine hundred and eighty validation hands. The optional final test evaluation has not been run.\n\n[NEXT SLIDE \u2014 after the final sentence and all 4 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 13,
+    "title": "The forest improves accuracy, but macro F1 stays low",
+    "speaker": "Lilian",
+    "reveal_clicks": 1,
+    "groups": [
+      [
+        [
+          249,
+          null
+        ]
+      ]
+    ],
+    "labels": [
+      "the two-metric comparison chart"
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 25 seconds plus brief reveal pauses\nREVEALS: 1; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in the two-metric comparison chart. Wait 0.5 seconds; allow 2 seconds for the audience to inspect the chart.]\nThe two panels summarize the same comparison with different metrics. The accuracy panel uses a zero-to-one-hundred-percent scale. Macro F1 is on a separate zero-to-one scale, with the axis zoomed to zero point one five so the differences are readable. The forest improves over the baseline, but its low macro F1 indicates that the improvement does not extend evenly across the ten categories. A higher overall score is only part of the story.\n\n[NEXT SLIDE \u2014 after the final sentence and all 1 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 14,
+    "title": "Where the Model Struggles",
+    "speaker": "Lilian",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          255,
+          0
+        ]
+      ],
+      [
+        [
+          255,
+          1
+        ]
+      ],
+      [
+        [
+          255,
+          2
+        ]
+      ],
+      [
+        [
+          255,
+          3
+        ]
+      ]
+    ],
+    "labels": [
+      "High-card recall: 87.7%.",
+      "One-pair recall: 39.5%.",
+      "Eight other categories: 0% recall on this split.",
+      "Rare-class scores have very little support."
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 25 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in High-card recall: 87.7%. Wait 0.5 seconds, then speak.]\nThe class-level results explain the weak macro F1. The forest correctly identifies about eighty-eight percent of actual high-card hands.\n\n[CLICK 2 \u2014 fade in One-pair recall: 39.5%. Wait 0.5 seconds, then speak.]\nIt identifies only about forty percent of actual one-pair hands. Even the notebook's example pair of tens is predicted as high card.\n\n[CLICK 3 \u2014 fade in Eight other categories: 0% recall on this split. Wait 0.5 seconds, then speak.]\nThe other eight categories have zero recall on this validation split.\n\n[CLICK 4 \u2014 fade in Rare-class scores have very little support. Wait 0.5 seconds, then speak.]\nA single example illustrates an error, but the class-level evaluation is the broader evidence. We also need support, the number of examples behind each score.\n\n[NEXT SLIDE \u2014 after the final sentence and all 4 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 15,
+    "title": "Recall reveals which hands are missed",
+    "speaker": "Lilian",
+    "reveal_clicks": 1,
+    "groups": [
+      [
+        [
+          262,
+          null
+        ]
+      ]
+    ],
+    "labels": [
+      "the class-recall chart"
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 30 seconds plus brief reveal pauses\nREVEALS: 1; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in the class-recall chart. Wait 0.5 seconds; allow 2 seconds for the audience to inspect the chart.]\nRecall asks what fraction of actual hands in a category the model finds. The labels also show support, the number of validation examples. Two pairs has two hundred and forty-one examples with zero recalled, so the failures extend beyond just the rarest hands. In contrast, each of the three rarest categories has only one validation example. Their observed zero recall is real for this split, but one example cannot tell us their population performance reliably.\n\n[NEXT SLIDE \u2014 after the final sentence and all 1 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 16,
+    "title": "Limitations",
+    "speaker": "Lilian",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          268,
+          0
+        ]
+      ],
+      [
+        [
+          268,
+          1
+        ]
+      ],
+      [
+        [
+          268,
+          2
+        ]
+      ],
+      [
+        [
+          268,
+          3
+        ]
+      ]
+    ],
+    "labels": [
+      "One validation example for each of the three rarest categories.",
+      "One split; no repeated evaluation.",
+      "Card order may change predictions.",
+      "Final test evaluation remains pending."
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 35 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in One validation example for each of the three rarest categories. Wait 0.5 seconds, then speak.]\nEach of the three rarest categories has only one validation example. This cannot establish reliable population performance.\n\n[CLICK 2 \u2014 fade in One split; no repeated evaluation. Wait 0.5 seconds, then speak.]\nThe comparison uses one validation split, which also guides selection. We have not measured variability across repeated evaluations.\n\n[CLICK 3 \u2014 fade in Card order may change predictions. Wait 0.5 seconds, then speak.]\nInputs retain card positions, so changing card order may change a prediction. Deduplication removes identical card sets but does not group suit-renamed equivalents.\n\n[CLICK 4 \u2014 fade in Final test evaluation remains pending. Wait 0.5 seconds, then speak.]\nFinal testing and development-to-test overlap reporting remain pending. We also disclose the earlier descriptive exploration of both supplied files.\n\n[NEXT SLIDE \u2014 after the final sentence and all 4 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 17,
+    "title": "Recommendations",
+    "speaker": "Lilian",
+    "reveal_clicks": 4,
+    "groups": [
+      [
+        [
+          274,
+          0
+        ]
+      ],
+      [
+        [
+          274,
+          1
+        ]
+      ],
+      [
+        [
+          274,
+          2
+        ]
+      ],
+      [
+        [
+          274,
+          3
+        ]
+      ]
+    ],
+    "labels": [
+      "Compare consistent card ordering and order-independent features.",
+      "Use a rule-based evaluator as a reference.",
+      "Repeat validation where feasible.",
+      "Lock the model, then run final testing."
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 30 seconds plus brief reveal pauses\nREVEALS: 4; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in Compare consistent card ordering and order-independent features. Wait 0.5 seconds, then speak.]\nOur next experiments should improve representation. We can compare consistent card ordering with order-independent features.\n\n[CLICK 2 \u2014 fade in Use a rule-based evaluator as a reference. Wait 0.5 seconds, then speak.]\nA correct rule-based evaluator provides a useful reference. We should explain when engineered features encode poker rules directly.\n\n[CLICK 3 \u2014 fade in Repeat validation where feasible. Wait 0.5 seconds, then speak.]\nWe should repeat validation where rare-class counts allow it.\n\n[CLICK 4 \u2014 fade in Lock the model, then run final testing. Wait 0.5 seconds, then speak.]\nThen we should lock the model and procedure before final testing. Report results on the supplied test file and separately on hands absent from development. These are proposed next steps, not completed results.\n\n[NEXT SLIDE \u2014 after the final sentence and all 4 reveals, pause 1 second. Click once to advance. Let the next dissolve finish before triggering a reveal.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 18,
+    "title": "Conclusion",
+    "speaker": "Lilian",
+    "reveal_clicks": 3,
+    "groups": [
+      [
+        [
+          280,
+          0
+        ]
+      ],
+      [
+        [
+          280,
+          1
+        ]
+      ],
+      [
+        [
+          280,
+          2
+        ]
+      ]
+    ],
+    "labels": [
+      "Random forest beats the baseline on validation accuracy.",
+      "Low macro F1 shows weak performance across all ten categories.",
+      "Reliable hand recognition needs better features and further evaluation."
+    ],
+    "notes": "SPEAKER: Lilian\nREHEARSAL TARGET: 25 seconds plus brief reveal pauses\nREVEALS: 3; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[CLICK 1 \u2014 fade in Random forest beats the baseline on validation accuracy. Wait 0.5 seconds, then speak.]\nOur answer is qualified: the random forest improves validation accuracy over a majority baseline.\n\n[CLICK 2 \u2014 fade in Low macro F1 shows weak performance across all ten categories. Wait 0.5 seconds, then speak.]\nLow macro F1, zero recall outside the two most common classes, and the training-to-validation gap limit that result.\n\n[CLICK 3 \u2014 fade in Reliable hand recognition needs better features and further evaluation. Wait 0.5 seconds, then speak.]\nThe current representation does not support reliable classification across all ten categories. The project shows why careful preparation and class-level interpretation matter as much as one headline accuracy.\n\n[PAUSE 1 second after the conclusion. Advance once to the shared closing slide.]\n\nEVIDENCE: poker_hand_model_training.ipynb, saved code and validation outputs"
+  },
+  {
+    "slide": 19,
+    "title": "Sources, speaking roles, and contribution record",
+    "speaker": "Both",
+    "reveal_clicks": 0,
+    "groups": [],
+    "labels": [],
+    "notes": "SPEAKER: Both\nREHEARSAL TARGET: 10 seconds plus brief reveal pauses\nREVEALS: 0; then one separate click to advance.\n\n[ON ARRIVAL \u2014 let the 0.45-second dissolve finish; pause 0.5 seconds. Title and context are visible. Do not advance again yet.]\n\n[NO CONTENT BUILDS \u2014 keep this slide visible while speaking.]\nFrancisco: Our code and saved outputs are documented in the two project notebooks.\nLilian: Before submission, we will confirm the contribution record and complete the required AI attribution. Thank you.\n\n[FINISH \u2014 pause 2 seconds after \u201cThank you.\u201d Leave the closing slide visible; do not advance.]\n\nEVIDENCE: Local notebooks and README course-requirement summary; speaking roles are assigned here, actual coding/review roles remain to be confirmed."
+  }
+]

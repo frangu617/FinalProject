@@ -1,0 +1,211 @@
+[
+  {
+    "title": "Poker Hand Classification",
+    "speaker": "Francisco",
+    "seconds": 20,
+    "script": "Hello, we are Francisco Gutierrez and Lilian Kim. Our project asks how well classification models recognize five-card poker hands, especially when some categories are much more common than others. I will cover the data and modeling setup, and Lilian will explain the results and what they mean.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 1,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Table of Contents",
+    "speaker": "Francisco",
+    "seconds": 15,
+    "script": "We will follow the analysis from the research question through data preparation, exploration, model selection, and evaluation. We will show short code excerpts along the way, then close with limitations and recommendations.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 2,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Introduction",
+    "speaker": "Francisco",
+    "seconds": 35,
+    "script": "Our experience with statistics has often centered on medical research. Poker gives us a different setting with clear rules and known labels. The task is to classify a supplied hand into one of ten categories. We are not predicting future cards or an opponent's hidden cards. Because rules determine the correct category, this is also a useful way to examine what a statistical model actually learns. Our main question is how performance differs between common and rare hands.",
+    "source": "poker_hand_analysis.ipynb, saved descriptive outputs",
+    "original": 3,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "What does one record contain?",
+    "speaker": "Francisco",
+    "seconds": 30,
+    "script": "Each hand has ten inputs: a suit and a rank for each of five cards. The target is a separate category code. In this example, two cards have rank ten, so the correct category is one pair. Suit numbers identify categories, not strength. We keep the target out of the inputs. The raw representation also gives each card a position, which matters later when we discuss limitations.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": null,
+    "kind": "data",
+    "body": "Card          1        2        3        4        5\nSuit          1        2        3        4        1\nRank         10       10        2        7       13\n\nCLASS = 1  \u2192  One pair (two tens)\n\nSuits: 1=hearts, 2=spades, 3=diamonds, 4=clubs\nRanks: Ace=1, Jack=11, Queen=12, King=13",
+    "subtitle": "Five cards \u2192 ten input values \u2192 one category label"
+  },
+  {
+    "title": "Data Loading and Preparation",
+    "speaker": "Francisco",
+    "seconds": 40,
+    "script": "The supplied files contain twenty-five thousand and ten training records and one million test records. Training records pass checks for missing values, valid codes, and repeated cards within a hand. We also identify the same five cards even when their order changes. Removing one hundred and twelve repeated hands leaves twenty-four thousand eight hundred and ninety-eight distinct development hands. We split these into nineteen thousand nine hundred and eighteen training hands and four thousand nine hundred and eighty validation hands. The supplied test file stays separate from fitting and model selection.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 4,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Code: prevent the same hand crossing the split",
+    "speaker": "Francisco",
+    "seconds": 35,
+    "script": "This excerpt shows the essential preparation steps. The helper creates a key for the five-card set, ignoring order. We keep the first occurrence, separate the inputs from the target, and make an eighty-twenty stratified split with a fixed random seed. Stratification approximately preserves the category proportions. The full notebook also checks label conflicts and verifies that training and validation keys do not overlap. This prevents identical-card-set leakage, although it does not group hands related by renaming suits.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": null,
+    "kind": "code",
+    "body": "train_keys = unordered_hand_keys(train_data)\nkeep = ~train_keys.duplicated()\ndevelopment = train_data.loc[keep].copy()\nX_development = development[FEATURE_COLUMNS]\ny_development = development[\"CLASS\"]\n\nX_train, X_validation, y_train, y_validation = train_test_split(\n    X_development, y_development,\n    test_size=0.20, stratify=y_development, random_state=42,\n)",
+    "subtitle": "Excerpt from the training notebook; validation helpers are defined there."
+  },
+  {
+    "title": "Exploratory Data Analysis",
+    "speaker": "Francisco",
+    "seconds": 25,
+    "script": "The main exploratory finding is severe class imbalance. High card represents about fifty percent of the combined files, and one pair represents about forty-two percent. Together, they account for more than ninety-two percent of records. These are descriptive frequencies across both supplied files, not held-out model results. We disclose that the test file was included in that earlier descriptive exploration.",
+    "source": "poker_hand_analysis.ipynb, saved descriptive outputs",
+    "original": 5,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Most records belong to just two categories",
+    "speaker": "Francisco",
+    "seconds": 30,
+    "script": "The logarithmic axis makes the rare categories visible. It changes the spacing, not the counts. There are over five hundred thousand high-card records but only eight royal-flush records in the combined files. This means a model can score reasonably well on accuracy while missing uncommon hands. We therefore need a measure that gives each category equal weight, and we need to inspect how many examples support each score.",
+    "source": "poker_hand_analysis.ipynb, saved descriptive outputs",
+    "original": null,
+    "kind": "chart",
+    "body": "class_distribution.png",
+    "subtitle": "Combined supplied files \u2022 1,025,010 records \u2022 descriptive analysis only"
+  },
+  {
+    "title": "Model Selection",
+    "speaker": "Francisco",
+    "seconds": 40,
+    "script": "We compare three candidates on the same validation split: a majority baseline, a depth-limited decision tree, and a random forest with two hundred trees. The baseline always predicts high card. The learned models use one-hot encoded suits and ranks, with the encoder fitted only on training data. Class weighting increases the influence of uncommon categories but does not create more examples. We select using macro F1, the average F1 across all ten categories, and also report accuracy and class-level results. Lilian will now explain the implementation and findings.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 6,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Code: fit the encoder and classifier together",
+    "speaker": "Lilian",
+    "seconds": 35,
+    "script": "Thank you, Francisco. This pipeline keeps preprocessing and the classifier together. Calling fit on the training split learns both the encoder and the forest. We then predict the separate validation inputs. The macro F1 calculation includes all ten labels, so categories with no successful predictions still count. These are the forest settings used in the saved notebook. The other candidates use the same split and evaluation procedure, allowing a consistent comparison.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": null,
+    "kind": "code",
+    "body": "model = make_pipeline(\n    OneHotEncoder(handle_unknown=\"ignore\"),\n    RandomForestClassifier(n_estimators=200,\n        class_weight=\"balanced_subsample\", random_state=42, n_jobs=-1),\n)\nmodel.fit(X_train, y_train)\nprediction = model.predict(X_validation)\nscore = f1_score(y_validation, prediction, labels=list(range(10)),\n                 average=\"macro\", zero_division=0)",
+    "subtitle": "Notebook excerpt \u2022 200 trees \u2022 fixed seed \u2022 preprocessing fitted on training only"
+  },
+  {
+    "title": "Model Analysis",
+    "speaker": "Lilian",
+    "seconds": 30,
+    "script": "The random forest has the highest validation macro F1 among these candidates, so the notebook selects it. Its validation accuracy is sixty point five six percent, while macro F1 is only zero point one one nine four. Training accuracy is one hundred percent. That large training-to-validation gap suggests overfitting. Selection here means the strongest of these three candidates on this one split; it does not establish a reliable classifier across all categories.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 7,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Validation Results",
+    "speaker": "Lilian",
+    "seconds": 25,
+    "script": "The table shows why both metrics matter. The decision tree has lower accuracy than the majority baseline but a higher macro F1. The forest leads on both measures. Its accuracy exceeds the baseline by ten point six percentage points. All of these numbers come from the four thousand nine hundred and eighty validation hands. The notebook has not run the optional final test evaluation.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 8,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "The forest improves accuracy, but macro F1 stays low",
+    "speaker": "Lilian",
+    "seconds": 25,
+    "script": "The two panels summarize the same comparison with different metrics. The accuracy panel uses a zero-to-one-hundred-percent scale. Macro F1 is on a separate zero-to-one scale, with the axis zoomed to zero point one five so the differences are readable. The forest improves over the baseline, but its low macro F1 indicates that the improvement does not extend evenly across the ten categories. A higher overall score is only part of the story.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": null,
+    "kind": "chart",
+    "body": "validation_comparison.png",
+    "subtitle": "Same validation split \u2022 n=4,980 \u2022 separate metric scales \u2022 no final test results"
+  },
+  {
+    "title": "Where the Model Struggles",
+    "speaker": "Lilian",
+    "seconds": 25,
+    "script": "The class-level results explain the weak macro F1. The forest correctly identifies about eighty-eight percent of high-card hands, but only about forty percent of one-pair hands. It has zero recall for the eight remaining categories on this validation split. Even the notebook's example pair of tens is predicted as high card. That example illustrates an error; the class-level evaluation provides the broader evidence.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 9,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Recall reveals which hands are missed",
+    "speaker": "Lilian",
+    "seconds": 30,
+    "script": "Recall asks what fraction of actual hands in a category the model finds. The labels also show support, the number of validation examples. Two pairs has two hundred and forty-one examples with zero recalled, so the failures extend beyond just the rarest hands. In contrast, each of the three rarest categories has only one validation example. Their observed zero recall is real for this split, but one example cannot tell us their population performance reliably.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": null,
+    "kind": "chart",
+    "body": "validation_recall.png",
+    "subtitle": "Selected random forest \u2022 normalized within each true category \u2022 support shown as n"
+  },
+  {
+    "title": "Limitations",
+    "speaker": "Lilian",
+    "seconds": 35,
+    "script": "There are several limits to the claim. This is one validation split, and we have not quantified variability across repeated evaluations. The same split guides selection and supplies the reported comparison. The rarest categories have tiny support. Inputs retain card positions, so changing card order may change a prediction. Deduplication removes identical card sets, but does not group suit-renamed equivalents. We also disclose the earlier descriptive exploration of both supplied files. Final testing and development-to-test overlap reporting remain pending.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 10,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Recommendations",
+    "speaker": "Lilian",
+    "seconds": 30,
+    "script": "Our next experiments should improve representation and evaluation. We can compare consistent card ordering with order-independent features, while explaining when those features encode poker rules directly. A correct rule-based evaluator is a useful reference. We should repeat validation where rare-class counts allow it, then lock the model and procedure before final testing. The final evaluation should report performance on the supplied test file and separately on hands absent from development. These are proposed next steps, not completed results.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 11,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Conclusion",
+    "speaker": "Lilian",
+    "seconds": 25,
+    "script": "Our answer is qualified: the random forest improves validation accuracy over a majority baseline, but the current representation does not support reliable classification across all ten categories. Low macro F1, zero recall outside the two most common classes, and the training-to-validation gap all limit the result. The project demonstrates why preparing data carefully and interpreting class-level metrics matter as much as reporting a single headline accuracy.",
+    "source": "poker_hand_model_training.ipynb, saved code and validation outputs",
+    "original": 12,
+    "kind": null,
+    "body": null,
+    "subtitle": null
+  },
+  {
+    "title": "Sources, speaking roles, and contribution record",
+    "speaker": "Both",
+    "seconds": 10,
+    "script": "Francisco: Our code and saved outputs are documented in the two project notebooks.\nLilian: Before submission, we will confirm the contribution record and complete the required AI attribution. Thank you.",
+    "source": "Local notebooks and README course-requirement summary; speaking roles are assigned here, actual coding/review roles remain to be confirmed.",
+    "original": null,
+    "kind": "sources",
+    "body": "Francisco Gutierrez: research question, data, preparation, EDA, model selection\nLilian Kim: implementation, validation results, errors, limitations, conclusions\n\nCoding / code review: add verified contributions and commit or review links.\n\nData: Cattral & Oppacher (2002), UCI Poker Hand. DOI: 10.24432/C5KW38\nEvidence: poker_hand_analysis.ipynb; poker_hand_model_training.ipynb\nAI disclosure: OpenAI Codex assisted with slide additions and speaker notes.\nReview and explain the content; complete the course-required attribution.",
+    "subtitle": "Speaking allocation is set; actual coding and review contributions need team confirmation."
+  }
+]

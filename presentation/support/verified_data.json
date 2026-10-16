@@ -1,0 +1,17 @@
+{
+  "combined_counts": {
+    "9": 8,
+    "8": 17,
+    "1": 433097,
+    "0": 513702,
+    "4": 3978,
+    "3": 21634,
+    "2": 48828,
+    "5": 2050,
+    "6": 1460,
+    "7": 236
+  },
+  "training_records": 25010,
+  "duplicates_removed": 112,
+  "source": "local ZIP and saved notebook outputs"
+}
